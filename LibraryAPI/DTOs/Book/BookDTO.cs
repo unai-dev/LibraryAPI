@@ -7,6 +7,6 @@ namespace LibraryAPI.DTOs.Book
         public int Id { get; set; }
         public required string Title { get; set; }
         public required string Description { get; set; }
-        public AuthorDTO? Author { get; set; }
+        public string AuthorName { get; set; } = string.Empty;
     }
 }

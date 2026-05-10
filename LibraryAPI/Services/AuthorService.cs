@@ -49,7 +49,7 @@ namespace LibraryAPI.Services
          * Metodo CreateAuthor, crea un autor en la base de datos y lo devuelve mapeado
          * return --> authordto
          */
-        public async Task<AuthorDTO> CreateAuthorAsync([FromBody] AuthorDTO authorDTO)
+        public async Task<AuthorDTO> CreateAuthorAsync([FromBody] CreateAuthorDTO authorDTO)
         {
             var author = mapper.Map<Author>(authorDTO);
 

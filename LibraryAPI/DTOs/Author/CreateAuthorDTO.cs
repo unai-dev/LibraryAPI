@@ -4,10 +4,10 @@ namespace LibraryAPI.DTOs.Author
 {
     public class CreateAuthorDTO
     {
-        [Required, MinLength(255)]
+        [Required, MinLength(5)]
         public required string Name { get; set; }
 
-        [Required]
+        [Required, Range(12, 90)]
         public int Age { get; set; }
     }
 }

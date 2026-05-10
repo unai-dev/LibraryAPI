@@ -8,8 +8,9 @@ namespace LibraryAPI.Utils.Mapping
     {
         public BookProfile()
         {
-            CreateMap<Book, BookDTO>();
-            CreateMap<CreateBookDTO, BookDTO>();
+            CreateMap<Book, BookDTO>()
+                .ForMember(map => map.AuthorName, cfg => cfg.MapFrom(x => x.Author!.Name));
+            CreateMap<CreateBookDTO, Book>();
         }
     }
 }

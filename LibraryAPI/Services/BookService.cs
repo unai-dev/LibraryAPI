@@ -2,12 +2,13 @@
 using LibraryAPI.Config;
 using LibraryAPI.DTOs.Book;
 using LibraryAPI.Entities;
+using LibraryAPI.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace LibraryAPI.Services
 {
-    public class BookService
+    public class BookService : IBookService
     {
         private readonly ApplicationDbContext dbContext;
         private readonly IMapper mapper;
@@ -20,7 +21,7 @@ namespace LibraryAPI.Services
 
         public async Task<IEnumerable<BookDTO>> GetBooksAsync()
         {
-            var books = await dbContext.Books.ToListAsync();
+            var books = await dbContext.Books.Include(a => a.Author).ToListAsync();
 
             return mapper.Map<IEnumerable<BookDTO>>(books);
         }
@@ -38,9 +39,26 @@ namespace LibraryAPI.Services
         {
             var book = mapper.Map<Book>(bookDTO);
 
-            var author = dbContext.Authors.FirstOrDefaultAsync(x => x.Id == book.AuthorId);
+            var authorExists = await dbContext.Authors.AnyAsync(x => x.Id == book.AuthorId);
 
-            book.Author.Id = author.Id;
+            if (!authorExists)
+            {
+                return null!;
+            }
+
+            dbContext.Add(book);
+            await dbContext.SaveChangesAsync();
+
+            return mapper.Map<BookDTO>(book);
+        }
+
+        public async Task<bool> DeleteBookAsync([FromRoute] int id)
+        {
+
+            var result = await dbContext.Books.Where(x => x.Id == id).ExecuteDeleteAsync();
+
+            return result > 0;
+
         }
 
 

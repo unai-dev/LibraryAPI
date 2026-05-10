@@ -32,14 +32,14 @@ namespace LibraryAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<AuthorDTO>> Post([FromBody] AuthorDTO authorDTO)
+        public async Task<ActionResult<AuthorDTO>> Post([FromBody] CreateAuthorDTO authorDTO)
         {
             var result = await authorService.CreateAuthorAsync(authorDTO);
 
             return result is null ? NotFound() : Ok(result);
         }
 
-        [HttpDelete("{int:id}")]
+        [HttpDelete("{id:int}")]
         public async Task<ActionResult> Delete([FromRoute] int id)
         {
             var result = await authorService.DeleteAuthorAsync(id);
