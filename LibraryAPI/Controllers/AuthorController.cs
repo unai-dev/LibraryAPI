@@ -1,4 +1,6 @@
 ﻿using LibraryAPI.DTOs.Author;
+using LibraryAPI.DTOs.Filter;
+using LibraryAPI.Exceptions;
 using LibraryAPI.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,9 +18,9 @@ namespace LibraryAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<AuthorDTO>>> Get()
+        public async Task<ActionResult<IEnumerable<AuthorDTO>>> Get([FromQuery] AuthorFilterDTO filter)
         {
-            var authors = await authorService.GetAuthorsAsync();
+            var authors = await authorService.GetAuthorsAsync(filter);
 
             return authors is null ? NotFound() : Ok(authors);
         }
@@ -26,17 +28,40 @@ namespace LibraryAPI.Controllers
         [HttpGet("{id:int}")]
         public async Task<ActionResult<AuthorDTO>> Get([FromRoute] int id)
         {
-            var author = await authorService.GetAuthorByIdAsync(id);
+            try
+            {
+                var author = await authorService.GetAuthorByIdAsync(id);
 
-            return author is null ? NotFound() : Ok(author);
+                return Ok(author);
+            }
+            catch (NotFoundException e)
+            {
+                return NotFound(new { error = e.Message });
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, new { error = "Error interno del servidor" });
+            }
+
         }
 
         [HttpPost]
         public async Task<ActionResult<AuthorDTO>> Post([FromBody] CreateAuthorDTO authorDTO)
         {
-            var result = await authorService.CreateAuthorAsync(authorDTO);
+            try
+            {
+                var result = await authorService.CreateAuthorAsync(authorDTO);
 
-            return result is null ? NotFound() : Ok(result);
+                return Ok(result);
+            }
+            catch (NotFoundException e)
+            {
+                return NotFound(new { error = e.Message });
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, new { error = "Error interno del servidor" });
+            }
         }
 
         [HttpDelete("{id:int}")]

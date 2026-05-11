@@ -1,4 +1,5 @@
 ﻿using LibraryAPI.DTOs.Author;
+using LibraryAPI.DTOs.Filter;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LibraryAPI.Interfaces
@@ -8,6 +9,6 @@ namespace LibraryAPI.Interfaces
         Task<AuthorDTO> CreateAuthorAsync([FromBody] CreateAuthorDTO authorDTO);
         Task<bool> DeleteAuthorAsync([FromRoute] int id);
         Task<AuthorDTO> GetAuthorByIdAsync([FromRoute] int id);
-        Task<IEnumerable<AuthorDTO>> GetAuthorsAsync();
+        Task<IEnumerable<AuthorDTO>> GetAuthorsAsync([FromQuery] AuthorFilterDTO filter);
     }
 }
