@@ -24,6 +24,7 @@ builder.Services.AddControllers();
 // Configuracion de servicios adicionales
 builder.Services.AddScoped<IAuthorService, AuthorService>();
 builder.Services.AddScoped<IBookService, BookService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
 
 // Configuracion swagger service
 builder.Services.AddSwaggerGen();
